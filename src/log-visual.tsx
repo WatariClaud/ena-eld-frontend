@@ -35,7 +35,7 @@ const generateHosPath = (statusChanges: string | any[], svgWidth: number, rowHei
     let path = "";
     
     const firstLog = statusChanges[0];
-    const firstStatus = firstLog.status.toUpperCase();
+    // const firstStatus = firstLog.status.toUpperCase();
     const firstX = getXCoordinate(firstLog.timestamp);
 
     console.log({firstLog: firstLog.status})
@@ -56,11 +56,12 @@ const generateHosPath = (statusChanges: string | any[], svgWidth: number, rowHei
         const nextLog = statusChanges[i + 1];
 
         const currentStatus = currentLog.status.toUpperCase();
-        const currentY = STATUS_MAP[currentStatus];
+        type StatusKey = keyof typeof STATUS_MAP;
+        const currentY = STATUS_MAP[currentStatus as StatusKey];
 
         if (nextLog) {
             const nextX = getXCoordinate(nextLog.timestamp);
-            const nextY = STATUS_MAP[nextLog.status.toUpperCase()];
+            const nextY = STATUS_MAP[nextLog.status.toUpperCase() as StatusKey];
 
             // Horizontal line: current status maintained until the next change time
             path += ` L ${nextX},${currentY}`; 
@@ -81,7 +82,10 @@ const generateHosPath = (statusChanges: string | any[], svgWidth: number, rowHei
     return path;
 };
 
-const LogVisualizer = ({ log }) => {
+interface LogVisualizerProps {
+    log: any
+}
+const LogVisualizer = ({ log }: LogVisualizerProps) => {
     console.clear();
     console.log(log)
     
